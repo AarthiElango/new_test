@@ -1,24 +1,22 @@
-module tb_blink;
-  reg clk = 0;
-  reg rst = 1;
-  wire [3:0] led;
+module adder_tb(); //TestBench code start
+reg [15:0] a;
+reg [15:0] b;
+wire [16:0] c;
 
-  blink dut (
-    .clk(clk),
-    .rst(rst),
-    .led(led)
-  );
+adder DUT(.a(a),.b(b),.c(c)); //DUT Instantiation
 
-  always #5 clk = ~clk;
-
-  initial begin
-    $dumpfile("dump.vcd");
-    $dumpvars(0, tb_blink);
-
-    rst = 1;
-    #20;
-    rst = 0;
-    #200;
-    $finish;
-  end
-endmodule
+initial
+begin	
+	$dumpfile("dump.vcd");
+	$dumpvars;
+end
+initial
+repeat(10) begin
+a = ($random)%100; //apply random stimulus
+b = ($random)%100;
+#10
+$display(" a=%0d,b=%0d,c=%0d",a,b,c);
+if( a + b != c) // monitor logic.
+$display(" *ERROR* ");
+end
+endmodule //TestBench code end
